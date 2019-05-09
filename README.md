@@ -1,0 +1,2 @@
+# Intelektika
+KTU intelektikos projektas
