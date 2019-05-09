@@ -8,5 +8,15 @@ namespace Project
 {
     class Youtube
     {
+        private Dictionary<string, Youtuber> Youtubers;
+
+        public Youtube()
+        {
+            Youtubers = new Dictionary<string, Youtuber>();
+        }
+        public void AddYoutuber(Youtuber NewYoutuber)
+        {
+            Youtubers[NewYoutuber.ChannelName] = NewYoutuber;
+        }
     }
 }
