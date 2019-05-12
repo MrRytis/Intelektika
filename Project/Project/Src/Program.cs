@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,9 +13,26 @@ namespace Project
 
         static void Main(string[] args)
         {
-            Youtube youtube = new Youtube();
+            //0 diemnsija yra kiek eilučių, 1 dimensija kiek stulpelių.
+            long[,] inputs = {
+                { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 },//watch time
+                { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 }//uploads
+            };
+
+            long[] outputs = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 };//subs
+            Youtube youtube = new Youtube(inputs, outputs);
             //List<YoutubeChannel> list = new List<YoutubeChannel>();
-            ReadCsvFile(youtube);
+            //ReadCsvFile(youtube);
+            Console.WriteLine(youtube.Train());
+            long[,] data = {
+                { 2, 2, 2 },//watch time , uploads, subs
+                { 3, 3, 3 },//watch time , uploads, subs
+                { 4, 4, 4 },//watch time , uploads, subs
+                { 5, 5, 5 }//watch time , uploads, subs
+            };
+            //long[] data = { 5, 5 };
+            int r = youtube.Predict(data);
+            Console.WriteLine(r);
         }
 
         private static void ReadCsvFile(Youtube youtube)
