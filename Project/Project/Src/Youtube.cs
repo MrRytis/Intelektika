@@ -9,131 +9,94 @@ namespace Project
     class Youtube
     {
         private Dictionary<string, YoutubeChannel> youtubeChannel;
-        private long[,] Inputs;
-        private long[] Outputs;
-        private const double Threshold = 0.05;
-        private const double Precision = 0.00;
-        private double[] Weights;
-        private int Epoch = 0;
 
-        public Youtube(long[,] Inputs, long[] Outputs)
+        public Youtube()
         {
             youtubeChannel = new Dictionary<string, YoutubeChannel>();
-            this.Inputs = Inputs;
-            this.Outputs = Outputs;
         }
+
         public void AddChannel(YoutubeChannel NewYoutuber)
         {
             youtubeChannel[NewYoutuber.channelName] = NewYoutuber;
         }
-        public int Predict(/*long[] Inputs*/long[,] Inputs)
-        {
-            for (int row = 0; row < Inputs.GetLength(0); row++)
-            {
-                double U = 0;
 
-                for (int col = 0; col < Inputs.GetLength(1) - 1; col++)
+        public void CleanAnomolies()
+        {
+            int k = 2;
+            double[] avg = GetAverages();
+            double[] sd = GetStandartDeviation();
+
+            Dictionary<string, string> keyForRemoval = new Dictionary<string, string>();
+
+            double tukeySubsPlus = avg[0] + (k * sd[0]);
+            double tukeySubsMinus = avg[0] - (k * sd[0]);
+            double tukeyUploadsPlus = avg[1] + (k * sd[1]);
+            double tukeyUploadsMinus = avg[1] - (k * sd[1]);
+            double tukeyViewsPlus = avg[2] + (k * sd[2]);
+            double tukeyViewsMinus = avg[2] - (k * sd[2]);
+
+            foreach (KeyValuePair<string, YoutubeChannel> entry in youtubeChannel)
+            {
+                if (entry.Value.subscribers > tukeySubsPlus || entry.Value.subscribers < tukeySubsMinus)
                 {
-                    U += Inputs[row, col] * Weights[col];
+                    if(!keyForRemoval.ContainsKey(entry.Key))
+                        keyForRemoval.Add(entry.Key, entry.Key);
                 }
-                Console.WriteLine("Inputs {0} {1}", Inputs[row, 0], Inputs[row, 1]);
-                Console.WriteLine("Prediction {0} Should be {1}", U, Inputs[row, 2]);
-            }
-            //double U = 0;
-
-            //for (int i = 0; i < Inputs.Length; i++)
-            //{
-            //    U += Inputs[i] * Weights[i];
-            //}
-            //Console.WriteLine("U {0}", U);
-            //return StepFunction(U);
-            return 0;
-        }
-        public int Train()
-        {
-            InitialiseRandomWeights(Inputs);
-
-            double EQMAnterior, EQMAtual;
-
-            do
-            {
-                EQMAnterior = LeastMeanSquare();
-
-                for (int k = 0; k < Inputs.GetLength(0); k++)
+                if (entry.Value.videoUploads > tukeyUploadsPlus || entry.Value.videoUploads < tukeyUploadsMinus)
                 {
-                    double U = 0;
-
-                    for (int i = 0; i < Weights.Length; i++)
-                    {
-                        U +=  Inputs[i,k] * Weights[i];
-                    }
-
-                    for (int i = 0; i < Weights.Length; i++)
-                    {
-                        Weights[i] = Weights[i] + Threshold * (Outputs[i] - U) * Inputs[i, k];
-                    }
+                    if (!keyForRemoval.ContainsKey(entry.Key))
+                        keyForRemoval.Add(entry.Key, entry.Key);
                 }
-                Epoch++;
-
-                EQMAtual = LeastMeanSquare();
-            } while (Math.Abs(EQMAtual - EQMAnterior) > Precision);
-
-            return Epoch;
-        }
-        private double WeightSun(int I)
-        {
-            double U = 0;
-
-            for (int i = 0; i < Inputs.GetLength(0); i++)
-            {
-                U += 0 * Weights[i];
-            }
-            return U;
-        }
-        private void InitialiseRandomWeights(long[,] Inputs)
-        {
-            Random rnd = new Random();
-
-            int i = Inputs.GetLength(0);//kiek eiluciu. musu aveju 2
-
-            Weights = new double[i];
-
-            for (int j = 0; j < i; j++)
-            {
-                Weights[j] = rnd.NextDouble();
-            }
-        }
-        private int StepFunction(double U)
-        {
-            return (U >= 0.5) ? 1 : -1;
-        }
-        private double LeastMeanSquare()
-        {
-            int i = Outputs.Length;//tike outupu kiek yra inputu deriniu arba stulpeliu?
-
-            double lms = 0d;
-            //for (int x = 0; x < Inputs.GetLength(0); x++)//eil
-            //{
-            //    double U = 0;
-            //    for (int y = 0; y < Inputs.GetLength(1); y++)//stulp
-            //    {
-            //        U += Weights[y] * Inputs[y, x];
-            //    }
-
-            //    lms += Math.Pow(Outputs[x] - U, 2);
-            //}
-            for (int x = 0; x < Inputs.GetLength(1); x++)//stulpeliai
-            {
-                double U = 0;
-                for (int y = 0; y < Inputs.GetLength(0); y++)//eilutes
+                if (entry.Value.videoViews > tukeyViewsPlus || entry.Value.videoViews < tukeyViewsMinus)
                 {
-                    U += Weights[y] * Inputs[y, x];
+                    if (!keyForRemoval.ContainsKey(entry.Key))
+                        keyForRemoval.Add(entry.Key, entry.Key);
                 }
-
-                lms += Math.Pow(Outputs[x] - U, 2);
             }
 
-            return lms/i;
+            foreach(KeyValuePair<string, string> removal in keyForRemoval)
+            {
+                youtubeChannel.Remove(removal.Value);
+            }
+        }
+
+        private double[] GetAverages()
+        {
+            double[] avg = new double[3] { 0, 0, 0};
+            foreach (KeyValuePair<string, YoutubeChannel> entry in youtubeChannel)
+            {
+                avg[0] = avg[0] + entry.Value.subscribers;
+                avg[1] = avg[1] + entry.Value.videoUploads;
+                avg[2] = avg[2] + entry.Value.videoViews;
+
+            }
+
+            for (int i = 0; i < avg.Length; i++)
+            {
+                avg[i] = avg[i] / youtubeChannel.Count;
+            }
+
+            return avg;
+        }
+
+        private double[] GetStandartDeviation()
+        {
+            double[] SD = new double[3] { 0, 0, 0 };
+            double[] avg = GetAverages();
+            foreach (KeyValuePair<string, YoutubeChannel> entry in youtubeChannel)
+            {
+                SD[0] = SD[0] + Math.Pow((entry.Value.subscribers - avg[0]),2);
+                SD[1] = SD[1] + Math.Pow((entry.Value.videoUploads - avg[1]), 2);
+                SD[2] = SD[2] + Math.Pow((entry.Value.videoViews - avg[2]), 2);
+
+            }
+
+            for (int i = 0; i < SD.Length; i++)
+            {
+                SD[i] = Math.Sqrt((1f / youtubeChannel.Count) * SD[i]);
+            }
+
+            return SD;
         }
     }
 }
