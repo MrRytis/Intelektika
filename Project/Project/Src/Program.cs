@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,8 +14,8 @@ namespace Project
         static void Main(string[] args)
         {
             Youtube youtube = new Youtube();
-            //List<YoutubeChannel> list = new List<YoutubeChannel>();
             ReadCsvFile(youtube);
+            youtube.CleanAnomolies();
         }
 
         private static void ReadCsvFile(Youtube youtube)
@@ -25,35 +25,30 @@ namespace Project
             {
                 while (!reader.EndOfStream)
                 {
-                    var line = cleanData(reader.ReadLine());
+                    var line = CleanFileData(reader.ReadLine());
                     var data = line.Split(',');
-                    if (i != 0)
+                    try
                     {
-                        try
-                        {
-                            YoutubeChannel channel = new YoutubeChannel(
-                            data[2],
-                            Convert.ToInt64(data[3]),
-                            Convert.ToInt64(data[5]),
-                            Convert.ToInt64(data[4])
-                            );
-                            youtube.AddChannel(channel);
-                        } catch
-                        {
-                            //data exception
-                        }
-                        
+                        YoutubeChannel channel = new YoutubeChannel(
+                        data[2],
+                        Convert.ToInt64(data[3]),
+                        Convert.ToInt64(data[5]),
+                        Convert.ToInt64(data[4])
+                        );
+                        youtube.AddChannel(channel);
                     }
-                    i++;
+                    catch
+                    {
+                        //data exception
+                    }
                 }
             }
         }
 
-        private static string cleanData(string data)
+        private static string CleanFileData(string data)
         {
             string oldline = data;
             data = data.Replace("\"", "");
-            data = data.Replace("--", "0");
             if (!data.Equals(oldline))
             {
                 data = data.Remove(data.IndexOf(','), 1);
