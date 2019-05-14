@@ -19,7 +19,7 @@ namespace Project
         {
             youtubeChannel[NewYoutuber.channelName] = NewYoutuber;
         }
-        public void DivideData()
+        public List<Dictionary<string, YoutubeChannel>> DivideData()
         {
             var chanels = youtubeChannel.Values.ToList();
             long subMin = chanels.Min(x => x.subscribers);
@@ -49,10 +49,7 @@ namespace Project
                     i++;
                 }
             }
-            foreach (var item in dataList)
-            {
-                Console.WriteLine(item.Count);
-            }
+            return dataList;
         }
         private List<Dictionary<string, YoutubeChannel>> PrepareSplitedList()
         {
