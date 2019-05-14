@@ -29,19 +29,15 @@ namespace Project.Src
             {
                 long number = entry.Value.videoViews;
                 List<long> Closest = FindClosest(number, true, 5);
-                Closest.Add(3060768208);
                 List<int> intervals = FindInterval(Closest, true);
-
-                for (int i = 0; i < Closest.Count; i++)
-                {
-                    Console.WriteLine("{0} {1}",Closest[i],number);
-                }
-                foreach (var item in intervals)
-                {
-                    Console.WriteLine("{0} {1}", item, number);
-                }
-                var interval = PredictInterval(intervals);
+                int interval = PredictInterval(intervals);
                 Console.WriteLine("Prediction {0}", interval);
+                number = entry.Value.videoUploads;
+                Closest = FindClosest(number, false, 5);
+                intervals = FindInterval(Closest, false);
+                interval = PredictInterval(intervals);
+                Console.WriteLine("Prediction {0}", interval);
+                Console.WriteLine("Subs {0}", entry.Value.subscribers);
             }
         }
         private List<long> FindClosest(long number, bool isViews, int howMany)//binary search geeksforgeeks
@@ -58,7 +54,6 @@ namespace Project.Src
                 {
                     Closest.Add(List[index]);
                 }
-
                 return Closest;
             }
 
@@ -158,7 +153,6 @@ namespace Project.Src
             {
                 long min = arr[i].Min();
                 long max = arr[i].Max();
-                Console.WriteLine("{0} {1}", min, max);
 
                 Intervals[i, 0] = min;
                 Intervals[i, 1] = max;
