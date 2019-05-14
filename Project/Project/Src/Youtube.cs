@@ -19,7 +19,47 @@ namespace Project
         {
             youtubeChannel[NewYoutuber.channelName] = NewYoutuber;
         }
+        public List<Dictionary<string, YoutubeChannel>> DivideData()
+        {
+            var chanels = youtubeChannel.Values.ToList();
+            long subMin = chanels.Min(x => x.subscribers);
+            long subMax = chanels.Max(x => x.subscribers);
 
+            long interval = (subMax - subMin) / 10;
+            var dataList = PrepareSplitedList();
+
+            foreach (KeyValuePair<string, YoutubeChannel> entry in youtubeChannel)
+            {
+                int i = 0;
+                long subs = entry.Value.subscribers;
+                while (true)
+                {
+                    long min = subMin + interval * i;
+                    long max = subMin + interval * (i + 1);
+                    if (subs == subMax)
+                    {
+                        dataList[9].Add(entry.Key, entry.Value);
+                        break;
+                    }
+                    if (subs >= min && subs < max)
+                    {
+                        dataList[i].Add(entry.Key, entry.Value);
+                        break;
+                    }
+                    i++;
+                }
+            }
+            return dataList;
+        }
+        private List<Dictionary<string, YoutubeChannel>> PrepareSplitedList()
+        {
+            var list = new List<Dictionary<string, YoutubeChannel>>();
+            for (int i = 0; i < 10; i++)
+            {
+                list.Add(new Dictionary<string, YoutubeChannel>());
+            }
+            return list;
+        }
         public void CleanAnomolies()
         {
             int k = 2;

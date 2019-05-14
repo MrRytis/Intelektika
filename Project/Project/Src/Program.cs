@@ -16,6 +16,7 @@ namespace Project
             Youtube youtube = new Youtube();
             ReadCsvFile(youtube);
             youtube.CleanAnomolies();
+            youtube.DivideData();
         }
 
         private static void ReadCsvFile(Youtube youtube)
