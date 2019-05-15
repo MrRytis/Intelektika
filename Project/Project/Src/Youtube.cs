@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Project.Src;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,16 +20,37 @@ namespace Project
         {
             youtubeChannel[NewYoutuber.channelName] = NewYoutuber;
         }
-        public List<Dictionary<string, YoutubeChannel>> DivideData()
+        public void CrossValidation(int howManyValidationFolds)
         {
-            var Chanels = youtubeChannel.Values.ToList();
+            var dataCount = youtubeChannel.Count;
+            var range = dataCount / howManyValidationFolds;
+            var values = youtubeChannel.Values.ToList();
+            Console.WriteLine("Viso duomenų: " + dataCount + " 1/" + howManyValidationFolds + " duomenų: " + range + "\n");
+            int start = 0;
+            for (int i = 0; i < howManyValidationFolds; i++)
+            {
+
+                var testData = values.GetRange(start, range).ToDictionary(x => x.channelName); //paimamas range kiekis duomeų -  testavimui
+                var trainData = values.GetRange(0, start).Concat(values.GetRange(start + range, dataCount - start - range)).ToDictionary(x => x.channelName); //paimami likusieji duomenys mokymuisi
+                start += range;
+
+                var fullData = DivideData(youtubeChannel, howManyValidationFolds);
+                var dividedData = DivideData(trainData, howManyValidationFolds);
+                //čia kviečiam algoritmo magijas
+                KNN knn = new KNN(fullData, dividedData, howManyValidationFolds);
+                knn.Test(testData);               
+            }
+        }
+        private List<Dictionary<string, YoutubeChannel>> DivideData(Dictionary<string, YoutubeChannel> trainData, int howManyIntervals)
+        {
+            var Chanels = trainData.Values.ToList();
             long subMin = Chanels.Min(x => x.subscribers);
             long subMax = Chanels.Max(x => x.subscribers);
 
-            long interval = (subMax - subMin) / 10;
-            var DataList = PrepareSplitedList();
+            long interval = (subMax - subMin) / howManyIntervals;
+            var DataList = PrepareSplitedList(howManyIntervals);
 
-            foreach (KeyValuePair<string, YoutubeChannel> entry in youtubeChannel)
+            foreach (KeyValuePair<string, YoutubeChannel> entry in trainData)
             {
                 int i = 0;
                 long subs = entry.Value.subscribers;
@@ -38,7 +60,7 @@ namespace Project
                     long max = subMin + interval * (i + 1);
                     if (subs == subMax)
                     {
-                        DataList[9].Add(entry.Key, entry.Value);
+                        DataList[howManyIntervals - 1].Add(entry.Key, entry.Value);
                         break;
                     }
                     if (subs >= min && subs < max)
@@ -51,10 +73,10 @@ namespace Project
             }
             return DataList;
         }
-        private List<Dictionary<string, YoutubeChannel>> PrepareSplitedList()
+        private List<Dictionary<string, YoutubeChannel>> PrepareSplitedList(int howManyIntervals)
         {
             var List = new List<Dictionary<string, YoutubeChannel>>();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < howManyIntervals; i++)
             {
                 List.Add(new Dictionary<string, YoutubeChannel>());
             }
