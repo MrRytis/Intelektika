@@ -26,6 +26,7 @@ namespace Project.Src
         public void Test(Dictionary<string, YoutubeChannel> testingDataList)
         {
             TestingDataList = testingDataList;
+
             long number;
             List<long> Closest;
             List<int> Intervals;
@@ -35,21 +36,22 @@ namespace Project.Src
             bool prediction;
             int correct = 0;
             int incorrect = 0;
+
             foreach (KeyValuePair<string, YoutubeChannel> entry in TestingDataList)
             {
                 number = entry.Value.videoViews;
                 Closest = FindClosest(number, true, 5);
                 Intervals = FindInterval(Closest, true);
                 viewsInterval = PredictInterval(Intervals);
-                //Console.WriteLine("Prediction {0}", viewsInterval);
+
                 number = entry.Value.videoUploads;
                 Closest = FindClosest(number, false, 5);
                 Intervals = FindInterval(Closest, false);
                 uploadsInterval = PredictInterval(Intervals);
+
                 subInterval = FindSubInterval(entry.Value.channelName);
-                //Console.WriteLine("Prediction {0}", uploadsInterval);
-                //Console.WriteLine("Subs {0}", entry.Value.subscribers);
                 prediction = isPredictionCorrect(subInterval, viewsInterval, uploadsInterval);
+
                 if (prediction)
                 {
                     correct++;
@@ -59,8 +61,8 @@ namespace Project.Src
                     incorrect++;
                 }
             }
+
             double percentage = (correct * 100) / (correct + incorrect);
-            //Console.WriteLine("{0:f4}",correct / (correct + incorrect));
             Console.WriteLine("Corrct {0} Incorrect {1} Percentage {2:f}", correct, incorrect, percentage);
         }
         private bool isPredictionCorrect(int trueValue, int prediction1, int prediction2)
