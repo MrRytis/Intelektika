@@ -40,6 +40,13 @@ namespace Project.Src
                 Console.WriteLine("Subs {0}", entry.Value.subscribers);
             }
         }
+        /// <summary>
+        /// Binary search rasti artimiausiems skaičiams pagal duotajį
+        /// </summary>
+        /// <param name="number">Duotasis skaičius</param>
+        /// <param name="isViews">Ar views?</param>
+        /// <param name="howMany">Kiek kaimynųS</param>
+        /// <returns></returns>
         private List<long> FindClosest(long number, bool isViews, int howMany)//binary search geeksforgeeks
         {
             List<long> Closest = new List<long>();
@@ -130,6 +137,12 @@ namespace Project.Src
             }
             return Closest;
         }
+        /// <summary>
+        /// Randame į kokius intervalus papuoda duotieji skaičiai
+        /// </summary>
+        /// <param name="numbers">Doutieji skaičiai</param>
+        /// <param name="isViews">Ar views</param>
+        /// <returns></returns>
         private List<int> FindInterval(List<long> numbers, bool isViews)
         {
             List<int> Result = new List<int>();
@@ -146,6 +159,11 @@ namespace Project.Src
             }
             return Result;
         }
+        /// <summary>
+        /// Susirandam tarp kokių intarvalų pasiskirste skaičiai masyvuose
+        /// </summary>
+        /// <param name="arr">Matrica kurioje turim views arba vid uploads</param>
+        /// <returns></returns>
         private long[,] FindIntervals(List<long[]> arr)
         {
             long[,] Intervals = new long[10, 2];
@@ -159,6 +177,11 @@ namespace Project.Src
             }
             return Intervals;
         }
+        /// <summary>
+        /// Sudarom sąrašą visų views arba vid uploads
+        /// </summary>
+        /// <param name="isViews">Ar views?</param>
+        /// <returns></returns>
         private List<long> FormList(bool isViews)
         {
             List<long> result = new List<long>();
@@ -186,6 +209,11 @@ namespace Project.Src
             result.Sort();
             return result;
         }
+        /// <summary>
+        /// Susidarom sąrašus views arba vid uploads pagal tai kaip suskirstyta training data į intervalus
+        /// </summary>
+        /// <param name="isViews">Ar atlikti veiksmus views ar vid uploads</param>
+        /// <returns></returns>
         private List<long[]> FormListOfArrays(bool isViews)
         {
             List<long[]> result = new List<long[]>();
@@ -217,6 +245,11 @@ namespace Project.Src
 
             return result;
         }
+        /// <summary>
+        /// Surandam kuris intervlaas dažniausiai kartojasi toks ir bus atsakymas
+        /// </summary>
+        /// <param name="Intervals">Gauti intervalai</param>
+        /// <returns></returns>
         private int PredictInterval(List<int> Intervals)
         {
             int interval = 0;
