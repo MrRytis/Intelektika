@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Src\KNN.cs" />
     <Compile Include="Src\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Src\Youtube.cs" />
