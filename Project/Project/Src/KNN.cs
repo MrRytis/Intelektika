@@ -8,13 +8,15 @@ namespace Project.Src
 {
     class KNN
     {
+        private List<Dictionary<string, YoutubeChannel>> FullDataList;
         private List<Dictionary<string, YoutubeChannel>> TainingDataList;
         private Dictionary<string, YoutubeChannel> TestingDataList;
         private int classesCount;
 
-        public KNN(List<Dictionary<string, YoutubeChannel>> dataList, int classesCount)
+        public KNN(List<Dictionary<string, YoutubeChannel>> fullDataList,  List<Dictionary<string, YoutubeChannel>> dataList, int classesCount)
         {
-            this.TainingDataList = dataList;
+            FullDataList = fullDataList;
+            TainingDataList = dataList;
             this.classesCount = classesCount;
         }
         public void Train()
@@ -25,20 +27,58 @@ namespace Project.Src
         {
             TestingDataList = testingDataList;
 
+            long number;
+            List<long> Closest;
+            List<int> Intervals;
+            int viewsInterval;
+            int uploadsInterval;
+            int subInterval;
+            bool prediction;
+            int correct = 0;
+            int incorrect = 0;
+
             foreach (KeyValuePair<string, YoutubeChannel> entry in TestingDataList)
             {
-                long number = entry.Value.videoViews;
-                List<long> Closest = FindClosest(number, true, 5);
-                List<int> Intervals = FindInterval(Closest, true);
-                int interval = PredictInterval(Intervals);
-                Console.WriteLine("Prediction {0}", interval);
+                number = entry.Value.videoViews;
+                Closest = FindClosest(number, true, 5);
+                Intervals = FindInterval(Closest, true);
+                viewsInterval = PredictInterval(Intervals);
+
                 number = entry.Value.videoUploads;
                 Closest = FindClosest(number, false, 5);
                 Intervals = FindInterval(Closest, false);
-                interval = PredictInterval(Intervals);
-                Console.WriteLine("Prediction {0}", interval);
-                Console.WriteLine("Subs {0}", entry.Value.subscribers);
+                uploadsInterval = PredictInterval(Intervals);
+
+                subInterval = FindSubInterval(entry.Value.channelName);
+                prediction = isPredictionCorrect(subInterval, viewsInterval, uploadsInterval);
+
+                if (prediction)
+                {
+                    correct++;
+                }
+                else
+                {
+                    incorrect++;
+                }
             }
+
+            double percentage = (correct * 100) / (correct + incorrect);
+            Console.WriteLine("Corrct {0} Incorrect {1} Percentage {2:f}", correct, incorrect, percentage);
+        }
+        private bool isPredictionCorrect(int trueValue, int prediction1, int prediction2)
+        {
+            return trueValue == prediction1 || trueValue == prediction2;
+        }
+        private int FindSubInterval(string name)
+        {
+            for (int i = 0; i < FullDataList.Count; i++)
+            {
+                if (FullDataList[i].TryGetValue(name, value: out YoutubeChannel value))
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
         /// <summary>
         /// Binary search rasti artimiausiems skaičiams pagal duotajį
@@ -102,9 +142,19 @@ namespace Project.Src
                     // return closest of two 
                     if (mid > 0 && number > List[mid - 1])
                     {
-                        for (int index = mid - howMany / 2; index < mid + howMany / 2 + 1; index++)
+                        if (mid < howMany && mid + howMany < List.Count)
                         {
-                            Closest.Add(List[index]);
+                            for (int index = mid; index < mid + howMany; index++)
+                            {
+                                Closest.Add(List[index]);
+                            }
+                        }
+                        else
+                        {
+                            for (int index = mid - howMany; index < mid; index++)
+                            {
+                                Closest.Add(List[index]);
+                            }
                         }
                         return Closest;
                     }
@@ -119,10 +169,21 @@ namespace Project.Src
                 {
                     if (mid < n - 1 && number < List[mid + 1])
                     {
-                        for (int index = mid - howMany / 2; index < mid + howMany / 2 + 1; index++)
+                        if (mid < howMany && mid + howMany < List.Count)
                         {
-                            Closest.Add(List[index]);
+                            for (int index = mid; index < mid + howMany; index++)
+                            {
+                                Closest.Add(List[index]);
+                            }
                         }
+                        else
+                        {
+                            for (int index = mid - howMany; index < mid; index++)
+                            {
+                                Closest.Add(List[index]);
+                            }
+                        }
+                        
                         return Closest;
                     }
                     i = mid + 1; // update i 
@@ -166,7 +227,7 @@ namespace Project.Src
         /// <returns></returns>
         private long[,] FindIntervals(List<long[]> Arr)
         {
-            long[,] Intervals = new long[10, 2];
+            long[,] Intervals = new long[classesCount, 2];
             for (int i = 0; i < Arr.Count; i++)
             {
                 long min = Arr[i].Min();

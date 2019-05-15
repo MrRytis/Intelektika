@@ -17,17 +17,7 @@ namespace Project
             Youtube youtube = new Youtube();
             ReadCsvFile(youtube);
             youtube.CleanAnomolies();
-            var dividedData = youtube.DivideData();
-            KNN algorithm = new KNN(dividedData, 10);
-            var youtubeChannel = new Dictionary<string, YoutubeChannel>();
-            YoutubeChannel NewYoutuber = new YoutubeChannel(
-                        "Zee TV",
-                        Convert.ToInt64(82757),
-                        Convert.ToInt64(18752951),
-                        Convert.ToInt64(20869786591)
-                        );
-            youtubeChannel[NewYoutuber.channelName] = NewYoutuber;
-            algorithm.Test(youtubeChannel);
+            youtube.CrossValidation(5);
         }
 
         private static void ReadCsvFile(Youtube youtube)
