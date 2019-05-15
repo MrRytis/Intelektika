@@ -21,12 +21,12 @@ namespace Project
         }
         public List<Dictionary<string, YoutubeChannel>> DivideData()
         {
-            var chanels = youtubeChannel.Values.ToList();
-            long subMin = chanels.Min(x => x.subscribers);
-            long subMax = chanels.Max(x => x.subscribers);
+            var Chanels = youtubeChannel.Values.ToList();
+            long subMin = Chanels.Min(x => x.subscribers);
+            long subMax = Chanels.Max(x => x.subscribers);
 
             long interval = (subMax - subMin) / 10;
-            var dataList = PrepareSplitedList();
+            var DataList = PrepareSplitedList();
 
             foreach (KeyValuePair<string, YoutubeChannel> entry in youtubeChannel)
             {
@@ -38,27 +38,27 @@ namespace Project
                     long max = subMin + interval * (i + 1);
                     if (subs == subMax)
                     {
-                        dataList[9].Add(entry.Key, entry.Value);
+                        DataList[9].Add(entry.Key, entry.Value);
                         break;
                     }
                     if (subs >= min && subs < max)
                     {
-                        dataList[i].Add(entry.Key, entry.Value);
+                        DataList[i].Add(entry.Key, entry.Value);
                         break;
                     }
                     i++;
                 }
             }
-            return dataList;
+            return DataList;
         }
         private List<Dictionary<string, YoutubeChannel>> PrepareSplitedList()
         {
-            var list = new List<Dictionary<string, YoutubeChannel>>();
+            var List = new List<Dictionary<string, YoutubeChannel>>();
             for (int i = 0; i < 10; i++)
             {
-                list.Add(new Dictionary<string, YoutubeChannel>());
+                List.Add(new Dictionary<string, YoutubeChannel>());
             }
-            return list;
+            return List;
         }
         public void CleanAnomolies()
         {
@@ -79,7 +79,7 @@ namespace Project
             {
                 if (entry.Value.subscribers > tukeySubsPlus || entry.Value.subscribers < tukeySubsMinus)
                 {
-                    if(!keyForRemoval.ContainsKey(entry.Key))
+                    if (!keyForRemoval.ContainsKey(entry.Key))
                         keyForRemoval.Add(entry.Key, entry.Key);
                 }
                 if (entry.Value.videoUploads > tukeyUploadsPlus || entry.Value.videoUploads < tukeyUploadsMinus)
@@ -94,7 +94,7 @@ namespace Project
                 }
             }
 
-            foreach(KeyValuePair<string, string> removal in keyForRemoval)
+            foreach (KeyValuePair<string, string> removal in keyForRemoval)
             {
                 youtubeChannel.Remove(removal.Value);
             }
@@ -102,7 +102,7 @@ namespace Project
 
         private double[] GetAverages()
         {
-            double[] avg = new double[3] { 0, 0, 0};
+            double[] avg = new double[3] { 0, 0, 0 };
             foreach (KeyValuePair<string, YoutubeChannel> entry in youtubeChannel)
             {
                 avg[0] = avg[0] + entry.Value.subscribers;
@@ -125,7 +125,7 @@ namespace Project
             double[] avg = GetAverages();
             foreach (KeyValuePair<string, YoutubeChannel> entry in youtubeChannel)
             {
-                SD[0] = SD[0] + Math.Pow((entry.Value.subscribers - avg[0]),2);
+                SD[0] = SD[0] + Math.Pow((entry.Value.subscribers - avg[0]), 2);
                 SD[1] = SD[1] + Math.Pow((entry.Value.videoUploads - avg[1]), 2);
                 SD[2] = SD[2] + Math.Pow((entry.Value.videoViews - avg[2]), 2);
 

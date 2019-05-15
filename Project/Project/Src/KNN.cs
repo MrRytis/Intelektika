@@ -8,13 +8,13 @@ namespace Project.Src
 {
     class KNN
     {
-        private List<Dictionary<string, YoutubeChannel>> tainingDataList;
-        private Dictionary<string, YoutubeChannel> testingDataList;
+        private List<Dictionary<string, YoutubeChannel>> TainingDataList;
+        private Dictionary<string, YoutubeChannel> TestingDataList;
         private int classesCount;
 
         public KNN(List<Dictionary<string, YoutubeChannel>> dataList, int classesCount)
         {
-            this.tainingDataList = dataList;
+            this.TainingDataList = dataList;
             this.classesCount = classesCount;
         }
         public void Train()
@@ -23,19 +23,19 @@ namespace Project.Src
         }
         public void Test(Dictionary<string, YoutubeChannel> testingDataList)
         {
-            this.testingDataList = testingDataList;
+            TestingDataList = testingDataList;
 
-            foreach (KeyValuePair<string, YoutubeChannel> entry in this.testingDataList)
+            foreach (KeyValuePair<string, YoutubeChannel> entry in TestingDataList)
             {
                 long number = entry.Value.videoViews;
                 List<long> Closest = FindClosest(number, true, 5);
-                List<int> intervals = FindInterval(Closest, true);
-                int interval = PredictInterval(intervals);
+                List<int> Intervals = FindInterval(Closest, true);
+                int interval = PredictInterval(Intervals);
                 Console.WriteLine("Prediction {0}", interval);
                 number = entry.Value.videoUploads;
                 Closest = FindClosest(number, false, 5);
-                intervals = FindInterval(Closest, false);
-                interval = PredictInterval(intervals);
+                Intervals = FindInterval(Closest, false);
+                interval = PredictInterval(Intervals);
                 Console.WriteLine("Prediction {0}", interval);
                 Console.WriteLine("Subs {0}", entry.Value.subscribers);
             }
@@ -140,14 +140,14 @@ namespace Project.Src
         /// <summary>
         /// Randame į kokius intervalus papuoda duotieji skaičiai
         /// </summary>
-        /// <param name="numbers">Doutieji skaičiai</param>
+        /// <param name="Numbers">Doutieji skaičiai</param>
         /// <param name="isViews">Ar views</param>
         /// <returns></returns>
-        private List<int> FindInterval(List<long> numbers, bool isViews)
+        private List<int> FindInterval(List<long> Numbers, bool isViews)
         {
             List<int> Result = new List<int>();
             long[,] Intervals = FindIntervals(FormListOfArrays(isViews));
-            foreach (var number in numbers)
+            foreach (var number in Numbers)
             {
                 for (int i = 0; i < Intervals.GetLength(0); i++)
                 {
@@ -162,15 +162,15 @@ namespace Project.Src
         /// <summary>
         /// Susirandam tarp kokių intarvalų pasiskirste skaičiai masyvuose
         /// </summary>
-        /// <param name="arr">Matrica kurioje turim views arba vid uploads</param>
+        /// <param name="Arr">Matrica kurioje turim views arba vid uploads</param>
         /// <returns></returns>
-        private long[,] FindIntervals(List<long[]> arr)
+        private long[,] FindIntervals(List<long[]> Arr)
         {
             long[,] Intervals = new long[10, 2];
-            for (int i = 0; i < arr.Count; i++)
+            for (int i = 0; i < Arr.Count; i++)
             {
-                long min = arr[i].Min();
-                long max = arr[i].Max();
+                long min = Arr[i].Min();
+                long max = Arr[i].Max();
 
                 Intervals[i, 0] = min;
                 Intervals[i, 1] = max;
@@ -184,30 +184,30 @@ namespace Project.Src
         /// <returns></returns>
         private List<long> FormList(bool isViews)
         {
-            List<long> result = new List<long>();
+            List<long> Result = new List<long>();
 
             if (isViews)
             {
-                for (int i = 0; i < tainingDataList.Count; i++)
+                for (int i = 0; i < TainingDataList.Count; i++)
                 {
-                    foreach (KeyValuePair<string, YoutubeChannel> entry in tainingDataList[i])
+                    foreach (KeyValuePair<string, YoutubeChannel> entry in TainingDataList[i])
                     {
-                        result.Add(entry.Value.videoViews);
+                        Result.Add(entry.Value.videoViews);
                     }
                 }
             }
             else
             {
-                for (int i = 0; i < tainingDataList.Count; i++)
+                for (int i = 0; i < TainingDataList.Count; i++)
                 {
-                    foreach (KeyValuePair<string, YoutubeChannel> entry in tainingDataList[i])
+                    foreach (KeyValuePair<string, YoutubeChannel> entry in TainingDataList[i])
                     {
-                        result.Add(entry.Value.videoUploads);
+                        Result.Add(entry.Value.videoUploads);
                     }
                 }
             }
-            result.Sort();
-            return result;
+            Result.Sort();
+            return Result;
         }
         /// <summary>
         /// Susidarom sąrašus views arba vid uploads pagal tai kaip suskirstyta training data į intervalus
@@ -216,34 +216,34 @@ namespace Project.Src
         /// <returns></returns>
         private List<long[]> FormListOfArrays(bool isViews)
         {
-            List<long[]> result = new List<long[]>();
+            List<long[]> Result = new List<long[]>();
 
             if (isViews)
             {
-                for (int i = 0; i < tainingDataList.Count; i++)
+                for (int i = 0; i < TainingDataList.Count; i++)
                 {
-                    result.Add(new long[tainingDataList[i].Count]);
+                    Result.Add(new long[TainingDataList[i].Count]);
                     int j = 0;
-                    foreach (KeyValuePair<string, YoutubeChannel> entry in tainingDataList[i])
+                    foreach (KeyValuePair<string, YoutubeChannel> entry in TainingDataList[i])
                     {
-                        result[i][j++] = entry.Value.videoViews;
+                        Result[i][j++] = entry.Value.videoViews;
                     }
                 }
             }
             else
             {
-                for (int i = 0; i < tainingDataList.Count; i++)
+                for (int i = 0; i < TainingDataList.Count; i++)
                 {
-                    result.Add(new long[tainingDataList[i].Count]);
+                    Result.Add(new long[TainingDataList[i].Count]);
                     int j = 0;
-                    foreach (KeyValuePair<string, YoutubeChannel> entry in tainingDataList[i])
+                    foreach (KeyValuePair<string, YoutubeChannel> entry in TainingDataList[i])
                     {
-                        result[i][j++] = entry.Value.videoUploads;
+                        Result[i][j++] = entry.Value.videoUploads;
                     }
                 }
             }
 
-            return result;
+            return Result;
         }
         /// <summary>
         /// Surandam kuris intervlaas dažniausiai kartojasi toks ir bus atsakymas
