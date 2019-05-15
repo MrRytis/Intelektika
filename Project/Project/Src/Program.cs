@@ -18,6 +18,7 @@ namespace Project
             ReadCsvFile(youtube);
             youtube.CleanAnomolies();
             var dividedData = youtube.DivideData();
+            CrossValidation(dividedData);
             KNN algorithm = new KNN(dividedData, 10);
             var youtubeChannel = new Dictionary<string, YoutubeChannel>();
             YoutubeChannel NewYoutuber = new YoutubeChannel(
@@ -28,6 +29,23 @@ namespace Project
                         );
             youtubeChannel[NewYoutuber.channelName] = NewYoutuber;
             algorithm.Test(youtubeChannel);
+        }
+
+        static void CrossValidation(List<Dictionary<string, YoutubeChannel>> dataList)
+        {
+            var dataCount = dataList.Count;
+            var range = dataCount / 10;
+            Console.WriteLine("Viso duomenų: " + dataCount + " 10% duomenų: " + range + "\n");
+            int start = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                var testData = dataList.GetRange(start, range); //paimamas range kiekis duomeų -  testavimui
+                var trainData = dataList.GetRange(0, start).Concat(dataList.GetRange(start + range, dataCount - start - range)).ToList(); //paimami likusieji duomenys mokymuisi
+                start += range;
+
+
+                //čia kviečiam algoritmo magijas
+            }
         }
 
         private static void ReadCsvFile(Youtube youtube)
