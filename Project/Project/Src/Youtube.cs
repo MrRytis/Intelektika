@@ -27,6 +27,7 @@ namespace Project
             var values = youtubeChannel.Values.ToList();
             Console.WriteLine("Viso duomenų: " + dataCount + " 1/" + howManyValidationFolds + " duomenų: " + range + "\n");
             int start = 0;
+            Bayes bayes = new Bayes();
             for (int i = 0; i < howManyValidationFolds; i++)
             {
 
@@ -38,6 +39,8 @@ namespace Project
                 var dividedData = DivideData(trainData, howManyValidationFolds);
                 //čia kviečiam algoritmo magijas
                 KNN knn = new KNN(fullData, dividedData, howManyValidationFolds);
+                bayes.Train(dividedData);
+                bayes.Test(fullData, testData);
                 knn.Test(testData);               
             }
         }
