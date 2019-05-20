@@ -175,6 +175,8 @@ namespace Project.Src
                             {
                                 Closest.Add(List[index]);
                             }
+                            Closest.Sort();
+                            return Closest;
                         }
                         else
                         {
@@ -183,7 +185,7 @@ namespace Project.Src
                                 Closest.Add(List[index]);
                             }
                         }
-                        
+                        Closest.Sort();
                         return Closest;
                     }
                     i = mid + 1; // update i 
@@ -353,6 +355,13 @@ namespace Project.Src
             Closest = FindClosest(number, false, 5);
             Intervals = FindInterval(Closest, false);
             uploadsInterval = PredictInterval(Intervals);
+
+            var k = FullDataList[uploadsInterval].Values;
+            long min = k.Min(x => x.subscribers);
+            long max = k.Max(x => x.subscribers);
+
+            Console.WriteLine(min);
+            Console.WriteLine(max);
 
             int i = 0;
         }
