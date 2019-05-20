@@ -359,7 +359,7 @@ namespace Project.Src
                 long min = k.Min(x => x.subscribers);
                 long max = k.Max(x => x.subscribers);
 
-                Console.WriteLine("Subscriber diapozonas: {0} iki {1}", min, max);
+                Console.WriteLine("Subscriber range: from {0} to {1}", min, max);
             }
 
             if (viewsInterval > uploadsInterval)
@@ -368,7 +368,7 @@ namespace Project.Src
                 long min = k.Min(x => x.subscribers);
                 long max = k.Max(x => x.subscribers);
 
-                Console.WriteLine("Subscriber diapozonas: {0} iki {1}", min, max);
+                Console.WriteLine("Subscriber range: from {0} to {1}", min, max);
             }
 
             if (viewsInterval < uploadsInterval)
@@ -377,7 +377,7 @@ namespace Project.Src
                 long min = k.Min(x => x.subscribers);
                 long max = k.Max(x => x.subscribers);
 
-                Console.WriteLine("Subscriber diapozonas: {0} iki {1}", min, max);
+                Console.WriteLine("Subscriber range: {0} to {1}", min, max);
             }
         }
     }

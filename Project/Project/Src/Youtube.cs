@@ -35,7 +35,7 @@ namespace Project
             var dataCount = youtubeChannel.Count;
             var range = dataCount / howManyValidationFolds;
             var values = youtubeChannel.Values.ToList();
-            Console.WriteLine("Viso duomenų: " + dataCount + " 1/" + howManyValidationFolds + " duomenų: " + range + "\n");
+            Console.WriteLine("Full Data: " + dataCount + " inputs. For testing we take 1/" + howManyValidationFolds + " of data. That is: " + range + "\n");
             int start = 0;
             Bayes bayes = new Bayes();
             List<string> knnResults = new List<string>();
