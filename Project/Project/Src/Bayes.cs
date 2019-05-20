@@ -37,9 +37,8 @@ namespace Project.Src
                 IntervalChanelsCount.Add(count);
                 ChanelsCount += count;
             }
-            //Console.WriteLine(IsInThisInterval(0));
         }
-        public void Test(List<Dictionary<string, YoutubeChannel>> fullData, Dictionary<string, YoutubeChannel> testData)
+        public string Test(List<Dictionary<string, YoutubeChannel>> fullData, Dictionary<string, YoutubeChannel> testData)
         {
             FullData = fullData;
             TestData = testData;
@@ -72,8 +71,8 @@ namespace Project.Src
                 }
             }
             double percentage = (correct * 100) / (correct + incorrect);
-            Console.WriteLine("Corrct {0} Incorrect {1} Percentage {2:f}", correct, incorrect, percentage);
-
+            //Console.WriteLine("Bayes Prediction Corrct {0} Incorrect {1} Percentage {2:f}", correct, incorrect, percentage);
+            return String.Format("Bayes Prediction Corrct {0} Incorrect {1} Percentage {2:f}", correct, incorrect, percentage);
         }
         private int FindHighestProbability(List<double> IntervalProbabilities)
         {
