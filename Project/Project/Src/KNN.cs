@@ -19,10 +19,6 @@ namespace Project.Src
             TainingDataList = dataList;
             this.classesCount = classesCount;
         }
-        public void Train()
-        {
-            //?
-        }
         public string Test(Dictionary<string, YoutubeChannel> testingDataList)
         {
             TestingDataList = testingDataList;
@@ -63,7 +59,6 @@ namespace Project.Src
             }
 
             double percentage = (correct * 100) / (correct + incorrect);
-            //Console.WriteLine("K-NN Prediction Corrct {0} Incorrect {1} Percentage {2:f}", correct, incorrect, percentage);
             return String.Format("K-NN Prediction Corrct {0} Incorrect {1} Percentage {2:f}", correct, incorrect, percentage);
         }
         private bool isPredictionCorrect(int trueValue, int prediction1, int prediction2)

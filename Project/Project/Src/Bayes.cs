@@ -23,6 +23,10 @@ namespace Project.Src
             ChanelsCount = 0;
             IntervalCount = 0;
         }
+        /// <summary>
+        /// Algorithms training
+        /// </summary>
+        /// <param name="Data">Data set for training</param>
         public void Train(List<Dictionary<string, YoutubeChannel>> Data)
         {
             TrainigData = Data;
@@ -38,6 +42,12 @@ namespace Project.Src
                 ChanelsCount += count;
             }
         }
+        /// <summary>
+        /// Method used to check algorithm rightness.
+        /// </summary>
+        /// <param name="fullData">all scaned data to check rightness</param>
+        /// <param name="testData">data wee use for testing</param>
+        /// <returns></returns>
         public string Test(List<Dictionary<string, YoutubeChannel>> fullData, Dictionary<string, YoutubeChannel> testData)
         {
             FullData = fullData;
@@ -71,9 +81,13 @@ namespace Project.Src
                 }
             }
             double percentage = (correct * 100) / (correct + incorrect);
-            //Console.WriteLine("Bayes Prediction Corrct {0} Incorrect {1} Percentage {2:f}", correct, incorrect, percentage);
             return String.Format("Bayes Prediction Corrct {0} Incorrect {1} Percentage {2:f}", correct, incorrect, percentage);
         }
+        /// <summary>
+        /// Method used to find which interval is the most likely
+        /// </summary>
+        /// <param name="IntervalProbabilities">list of all interval probabilities</param>
+        /// <returns></returns>
         private int FindHighestProbability(List<double> IntervalProbabilities)
         {
             double max = 0.0;
@@ -88,10 +102,20 @@ namespace Project.Src
             }
             return index;
         }
+        /// <summary>
+        /// Method used to calcucalte interval probability
+        /// </summary>
+        /// <param name="index">interval index</param>
+        /// <returns></returns>
         private double IntervalProbability(int index)
         {
             return Math.Round((double)IntervalChanelsCount[index] / (double)ChanelsCount, 4);
         }
+        /// <summary>
+        /// Method used to calculate probability of index interval is correct
+        /// </summary>
+        /// <param name="index">interval index</param>
+        /// <returns></returns>
         private double IsInThisInterval(int index)
         {
             if (IntervalChanelsCount[index] == 0)
@@ -110,6 +134,11 @@ namespace Project.Src
             }
             return Math.Round((double)intervalProbability / (double)notInThisChanel, 4);
         }
+        /// <summary>
+        /// Method used to find in which interval chanel is
+        /// </summary>
+        /// <param name="name">chanel name</param>
+        /// <returns></returns>
         private int FindSubInterval(string name)
         {
             for (int i = 0; i < FullData.Count; i++)
