@@ -335,5 +335,26 @@ namespace Project.Src
 
             return interval;
         }
+
+        public void GetResultBasedOnData(long viewCount, long uploadCount)
+        {
+            List<long> Closest;
+            List<int> Intervals;
+            int viewsInterval;
+            int uploadsInterval;
+            long number;
+
+            number = viewCount;
+            Closest = FindClosest(number, true, 5);
+            Intervals = FindInterval(Closest, true);
+            viewsInterval = PredictInterval(Intervals);
+
+            number = uploadCount;
+            Closest = FindClosest(number, false, 5);
+            Intervals = FindInterval(Closest, false);
+            uploadsInterval = PredictInterval(Intervals);
+
+            int i = 0;
+        }
     }
 }
