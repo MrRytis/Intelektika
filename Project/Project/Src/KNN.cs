@@ -357,14 +357,32 @@ namespace Project.Src
             Intervals = FindInterval(Closest, false);
             uploadsInterval = PredictInterval(Intervals);
 
-            var k = FullDataList[uploadsInterval].Values;
-            long min = k.Min(x => x.subscribers);
-            long max = k.Max(x => x.subscribers);
+            if (viewsInterval == uploadsInterval)
+            {
+                var k = FullDataList[uploadsInterval].Values;
+                long min = k.Min(x => x.subscribers);
+                long max = k.Max(x => x.subscribers);
 
-            Console.WriteLine(min);
-            Console.WriteLine(max);
+                Console.WriteLine("Subscriber diapozonas: {0} iki {1}", min, max);
+            }
 
-            int i = 0;
+            if (viewsInterval > uploadsInterval)
+            {
+                var k = FullDataList[viewsInterval].Values;
+                long min = k.Min(x => x.subscribers);
+                long max = k.Max(x => x.subscribers);
+
+                Console.WriteLine("Subscriber diapozonas: {0} iki {1}", min, max);
+            }
+
+            if (viewsInterval < uploadsInterval)
+            {
+                var k = FullDataList[uploadsInterval].Values;
+                long min = k.Min(x => x.subscribers);
+                long max = k.Max(x => x.subscribers);
+
+                Console.WriteLine("Subscriber diapozonas: {0} iki {1}", min, max);
+            }
         }
     }
 }
