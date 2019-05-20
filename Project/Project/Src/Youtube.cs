@@ -20,6 +20,16 @@ namespace Project
         {
             youtubeChannel[NewYoutuber.channelName] = NewYoutuber;
         }
+
+        public void CalculetaAnsBasedOnData(long viewCount, long uploadCount, int dataInterval)
+        {
+            var fullData = DivideData(youtubeChannel, dataInterval);
+
+            KNN knn = new KNN(fullData, fullData, dataInterval);
+            knn.GetResultBasedOnData(viewCount, uploadCount);
+
+        }
+
         public void CrossValidation(int howManyValidationFolds)
         {
             var dataCount = youtubeChannel.Count;

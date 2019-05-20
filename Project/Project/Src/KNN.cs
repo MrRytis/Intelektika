@@ -106,7 +106,7 @@ namespace Project.Src
 
             if (number >= List[n - 1])
             {
-                for (int index = n; index < n - howMany; index--)
+                for (int index = n - howMany; index < n; index++)
                 {
                     Closest.Add(List[index]);
                 }
@@ -148,6 +148,7 @@ namespace Project.Src
                             {
                                 Closest.Add(List[index]);
                             }
+                            return Closest;
                         }
                         else
                         {
@@ -155,8 +156,8 @@ namespace Project.Src
                             {
                                 Closest.Add(List[index]);
                             }
+                            return Closest;
                         }
-                        return Closest;
                     }
 
                     /* Repeat for left half */
@@ -175,6 +176,8 @@ namespace Project.Src
                             {
                                 Closest.Add(List[index]);
                             }
+                            Closest.Sort();
+                            return Closest;
                         }
                         else
                         {
@@ -182,9 +185,9 @@ namespace Project.Src
                             {
                                 Closest.Add(List[index]);
                             }
+                            Closest.Sort();
+                            return Closest;
                         }
-                        
-                        return Closest;
                     }
                     i = mid + 1; // update i 
                 }
@@ -334,6 +337,52 @@ namespace Project.Src
             }
 
             return interval;
+        }
+
+        public void GetResultBasedOnData(long viewCount, long uploadCount)
+        {
+            List<long> Closest;
+            List<int> Intervals;
+            int viewsInterval;
+            int uploadsInterval;
+            long number;
+
+            number = viewCount;
+            Closest = FindClosest(number, true, 5);
+            Intervals = FindInterval(Closest, true);
+            viewsInterval = PredictInterval(Intervals);
+
+            number = uploadCount;
+            Closest = FindClosest(number, false, 5);
+            Intervals = FindInterval(Closest, false);
+            uploadsInterval = PredictInterval(Intervals);
+
+            if (viewsInterval == uploadsInterval)
+            {
+                var k = FullDataList[uploadsInterval].Values;
+                long min = k.Min(x => x.subscribers);
+                long max = k.Max(x => x.subscribers);
+
+                Console.WriteLine("Subscriber diapozonas: {0} iki {1}", min, max);
+            }
+
+            if (viewsInterval > uploadsInterval)
+            {
+                var k = FullDataList[viewsInterval].Values;
+                long min = k.Min(x => x.subscribers);
+                long max = k.Max(x => x.subscribers);
+
+                Console.WriteLine("Subscriber diapozonas: {0} iki {1}", min, max);
+            }
+
+            if (viewsInterval < uploadsInterval)
+            {
+                var k = FullDataList[uploadsInterval].Values;
+                long min = k.Min(x => x.subscribers);
+                long max = k.Max(x => x.subscribers);
+
+                Console.WriteLine("Subscriber diapozonas: {0} iki {1}", min, max);
+            }
         }
     }
 }
