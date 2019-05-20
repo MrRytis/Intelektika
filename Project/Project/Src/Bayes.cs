@@ -35,5 +35,26 @@ namespace Project.Src
                 ChanelsCount += count;
             }
         }
+        private double IntervalProbability(int index)
+        {
+            return IntervalChanelsCount[index] / ChanelsCount;
+        }
+        private double IsInThisInterval(int i)
+        {
+            if (IntervalChanelsCount[i] == 0)
+            {
+                return 0.01;
+            }
+            if (IntervalChanelsCount[i] == ChanelsCount)
+            {
+                return 0.99;
+            }
+            double notInThisChanel = 0.0;
+            for (int i = 0; i < IntervalCount; i++)
+            {
+                if
+            }
+            return 0.0;
+        }
     }
 }
