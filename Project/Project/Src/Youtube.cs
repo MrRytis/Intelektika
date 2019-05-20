@@ -35,8 +35,12 @@ namespace Project
             var dataCount = youtubeChannel.Count;
             var range = dataCount / howManyValidationFolds;
             var values = youtubeChannel.Values.ToList();
-            Console.WriteLine("Viso duomenų: " + dataCount + " 1/" + howManyValidationFolds + " duomenų: " + range + "\n");
+            Console.WriteLine("Full Data: " + dataCount + " inputs. For testing we take 1/" + howManyValidationFolds + " of data. That is: " + range + "\n");
             int start = 0;
+            Bayes bayes = new Bayes();
+            List<string> knnResults = new List<string>();
+            List<string> bayesResults = new List<string>();
+
             for (int i = 0; i < howManyValidationFolds; i++)
             {
 
@@ -48,8 +52,21 @@ namespace Project
                 var dividedData = DivideData(trainData, howManyValidationFolds);
                 //čia kviečiam algoritmo magijas
                 KNN knn = new KNN(fullData, dividedData, howManyValidationFolds);
-                knn.Test(testData);               
+                bayes.Train(dividedData);
+                bayesResults.Add(bayes.Test(fullData, testData));
+                knnResults.Add(knn.Test(testData));               
             }
+            Console.WriteLine(new string('-',40));
+            foreach (var item in knnResults)
+            {
+                Console.WriteLine(item);
+            }
+            Console.WriteLine(new string('-', 40));
+            foreach (var item in bayesResults)
+            {
+                Console.WriteLine(item);
+            }
+            Console.WriteLine(new string('-', 40));
         }
         private List<Dictionary<string, YoutubeChannel>> DivideData(Dictionary<string, YoutubeChannel> trainData, int howManyIntervals)
         {

@@ -19,11 +19,7 @@ namespace Project.Src
             TainingDataList = dataList;
             this.classesCount = classesCount;
         }
-        public void Train()
-        {
-            //?
-        }
-        public void Test(Dictionary<string, YoutubeChannel> testingDataList)
+        public string Test(Dictionary<string, YoutubeChannel> testingDataList)
         {
             TestingDataList = testingDataList;
 
@@ -63,7 +59,7 @@ namespace Project.Src
             }
 
             double percentage = (correct * 100) / (correct + incorrect);
-            Console.WriteLine("Corrct {0} Incorrect {1} Percentage {2:f}", correct, incorrect, percentage);
+            return String.Format("K-NN Prediction Corrct {0} Incorrect {1} Percentage {2:f}", correct, incorrect, percentage);
         }
         private bool isPredictionCorrect(int trueValue, int prediction1, int prediction2)
         {
@@ -363,7 +359,7 @@ namespace Project.Src
                 long min = k.Min(x => x.subscribers);
                 long max = k.Max(x => x.subscribers);
 
-                Console.WriteLine("Subscriber diapozonas: {0} iki {1}", min, max);
+                Console.WriteLine("Subscriber range: from {0} to {1}", min, max);
             }
 
             if (viewsInterval > uploadsInterval)
@@ -372,7 +368,7 @@ namespace Project.Src
                 long min = k.Min(x => x.subscribers);
                 long max = k.Max(x => x.subscribers);
 
-                Console.WriteLine("Subscriber diapozonas: {0} iki {1}", min, max);
+                Console.WriteLine("Subscriber range: from {0} to {1}", min, max);
             }
 
             if (viewsInterval < uploadsInterval)
@@ -381,7 +377,7 @@ namespace Project.Src
                 long min = k.Min(x => x.subscribers);
                 long max = k.Max(x => x.subscribers);
 
-                Console.WriteLine("Subscriber diapozonas: {0} iki {1}", min, max);
+                Console.WriteLine("Subscriber range: {0} to {1}", min, max);
             }
         }
     }
