@@ -12,6 +12,7 @@ namespace Project.Src
         private Dictionary<string, YoutubeChannel> TestData;
         public List<int> IntervalChanelsCount { get; set; }
         public int ChanelsCount { get; set; }
+        public int IntervalCount { get; set; }
 
         public Bayes()
         {
@@ -19,6 +20,20 @@ namespace Project.Src
             TestData = new Dictionary<string, YoutubeChannel>();
             IntervalChanelsCount = new List<int>(); ;
             ChanelsCount = 0;
+            IntervalCount = 0;
+        }
+        public void Train(List<Dictionary<string, YoutubeChannel>> Data)
+        {
+            TrainigData = Data;
+            IntervalCount = TrainigData.Count;
+            int count;
+
+            for (int i = 0; i < IntervalCount; i++)
+            {
+                count = TrainigData[i].Count;
+                IntervalChanelsCount[i] = count;
+                ChanelsCount += count;
+            }
         }
     }
 }
