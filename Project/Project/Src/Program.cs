@@ -1,10 +1,5 @@
-﻿using Project.Src;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project
 {
@@ -18,6 +13,16 @@ namespace Project
             ReadCsvFile(youtube);
             youtube.CleanAnomolies();
             youtube.CrossValidation(5);
+
+        //read data in console
+        Inputs:
+            Console.WriteLine("Write views count");
+            long viewCount = Convert.ToInt64(Console.ReadLine());
+            Console.WriteLine("Write video upload count");
+            long uploadCount = Convert.ToInt64(Console.ReadLine());
+            youtube.CalculetaAnsBasedOnData(viewCount, uploadCount, 5);
+        goto Inputs;
+
         }
 
         private static void ReadCsvFile(Youtube youtube)
