@@ -106,7 +106,7 @@ namespace Project.Src
 
             if (number >= List[n - 1])
             {
-                for (int index = n; index < n - howMany; index--)
+                for (int index = n - howMany; index < n; index++)
                 {
                     Closest.Add(List[index]);
                 }
@@ -148,6 +148,7 @@ namespace Project.Src
                             {
                                 Closest.Add(List[index]);
                             }
+                            return Closest;
                         }
                         else
                         {
@@ -155,8 +156,8 @@ namespace Project.Src
                             {
                                 Closest.Add(List[index]);
                             }
+                            return Closest;
                         }
-                        return Closest;
                     }
 
                     /* Repeat for left half */
@@ -184,9 +185,9 @@ namespace Project.Src
                             {
                                 Closest.Add(List[index]);
                             }
+                            Closest.Sort();
+                            return Closest;
                         }
-                        Closest.Sort();
-                        return Closest;
                     }
                     i = mid + 1; // update i 
                 }
